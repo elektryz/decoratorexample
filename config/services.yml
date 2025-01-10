@@ -1,0 +1,24 @@
+services:
+  _defaults:
+    bind:
+      $orderStatusNotifier: '@inIT\DecoratorExample\Utils\OrderStatusNotifier'
+      $context: "@=service('prestashop.adapter.legacy.context').getContext()"
+      $compareHelper: '@inIT\DecoratorExample\Helper\CompareHelper'
+      $messageFormatHelper: '@inIT\DecoratorExample\Helper\MessageFormatHelper'
+      $fileHelper: '@inIT\DecoratorExample\Helper\FileHelper'
+
+  inIT\DecoratorExample\:
+    resource: '../src/*'
+
+  inIT\DecoratorExample\Decorator\OrderControllerDecorator:
+    class: inIT\DecoratorExample\Decorator\OrderControllerDecorator
+    decorates: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController
+    arguments: ['@inIT\DecoratorExample\Decorator\OrderControllerDecorator.inner']
+
+  inIT\DecoratorExample\Decorator\MaintenanceDecorator:
+    class: inIT\DecoratorExample\Decorator\MaintenanceDecorator
+    decorates: prestashop.adapter.maintenance.form_handler
+    arguments: [
+      '@inIT\DecoratorExample\Decorator\MaintenanceDecorator.inner',
+      '@prestashop.adapter.maintenance.configuration'
+    ]

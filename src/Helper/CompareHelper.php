@@ -47,18 +47,20 @@ class CompareHelper
             }
 
             if (!is_array($value)) {
-                if ($value !== $a2[$key]) {
-                    $keyDiff = $key;
-                    if ($recursiveKey) {
-                        $idLang = (int)$key;
-                        $keyDiff = $recursiveKey .
-                        isset($this->languages[$key]) ? ' ' . '(' . $this->languages[$key] . ')' : '_' . $idLang;
-                    }
-                    $this->diff[$keyDiff] = [
-                        'old' => is_bool($value) ? $value : strip_tags($value),
-                        'new' => is_bool($a2[$key]) ? $value : strip_tags($a2[$key]),
-                    ];
+                if ($value === $a2[$key]) {
+                    continue;
                 }
+
+                if ($recursiveKey) {
+                    $idLang = (int)$key;
+                    $key = $recursiveKey .
+                    isset($this->languages[$key]) ? ' ' . '(' . $this->languages[$key] . ')' : '_' . $idLang;
+                }
+                
+                $this->diff[$key] = [
+                    'old' => is_bool($value) ? $value : strip_tags($value),
+                    'new' => is_bool($a2[$key]) ? $value : strip_tags($a2[$key]),
+                ];
             } else {
                 $this->getDiff($value, $a2[$key], $key);
             }
